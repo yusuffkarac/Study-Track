@@ -1,0 +1,73 @@
+{% extends 'layout.html' %} {% block navtitle %}
+<h2 class="navtitle">Çalışma Ekle</h2>
+{% endblock %} {% block title %} Çalışma Ekle {% endblock %} {% load static %}
+{% block stylesheets %}
+
+<style>
+  @media only screen and (min-width: 600px) {
+    .navtitle {
+      display: none;
+    }
+  }
+</style>
+<link rel="stylesheet" href="{% static 'css/lecturesstyle.css' %}" />
+
+{% endblock %} {% block calismaekleblack %} bg-black{% endblock %} 
+{% block content %}
+
+<h1 class="d-flex justify-content-center mt-3">Çalışma Ekle</h1>
+
+<div class="d-flex justify-content-center fs-4">
+  <div class="rounded-3 text-white act-bg">
+    <form class="m-5" action="/add_study_def" method="post">
+      <!-- ######### başlık ######### -->
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label for="std_title">Başlık</label>
+        <input
+          type="text"
+          class="form-control mt-1"
+          id="std_title"
+          name="std_title"
+          placeholder="Ne çalıştın?"
+        />
+      </div>
+
+      <!-- ######### Ders ######### -->
+
+      <div class="form-group mt-1">
+        <label for="name">Ders</label>
+        <select class="form-select mt-1" name="std_lecture" aria-label="">
+          <option selected>Ders seçmek için tıklayın</option>
+          {% for lecture in lectures %}
+          <option value="{{lecture.id}}">{{lecture}}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <!-- ######### Kaç saat? ######### -->
+
+      <div class="form-group mt-3">
+        <label for="name">Çalışma Zamanı</label>
+        <input
+          type="number"
+          class="form-control mt-1"
+          id="std_minute"
+          name="std_minute"
+          placeholder="Kaç dakika çalıştın?"
+        />
+      </div>
+
+      <div class="form-group mt-3">
+        <input
+          type="submit"
+          class="form-control mt-1 btn btn-primary"
+          name="add_std"
+          value="Ekle"
+        />
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

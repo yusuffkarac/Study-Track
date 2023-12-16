@@ -1,0 +1,242 @@
+
+
+{% extends 'layout.html' %}
+{%load static%}
+{%block navtitle%}
+<h2 class="navtitle "> Harcamalarım </h2>
+{%endblock%}
+{%block title%}
+Harcamalarım 
+{%endblock%}
+
+{%block harcamablack%}bg-black {%endblock%}
+
+{% block stylesheets%}
+
+<style>
+  #example_wrapper {
+    background: rgb(148,187,233);
+    background: linear-gradient(236deg, rgba(148,187,233,1) 0%, rgba(243,229,255,1) 43%, rgba(238,174,202,1) 100%);
+    
+    
+    
+    
+    padding:1rem;
+    border-radius: 1rem;
+    margin-bottom: 1rem;
+  }
+
+
+  @media only screen and (min-width: 600px) {
+    .navtitle{
+      display:none;
+  }
+
+
+  body {
+	 text-align: center;
+	 margin: 80px auto 0;
+	 font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+
+
+  @media only screen and (min-width: 600px) {
+    bdy{
+    
+  }
+  #genel-div{
+    display: flex;
+    justify-content: center;
+  }
+
+ #example tbody > tr > td {
+  font-size: 1rem!important;
+
+white-space: nowrap;
+}
+
+
+  }
+
+ #example tbody > tr > td {
+  font-size: 12px;
+
+white-space: nowrap;
+}
+</style>
+
+
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+
+        var data = google.visualization.arrayToDataTable([
+          ['Tip', 'Harcanan ₺'],
+          ['Okul {{total_okul.price__sum}}',     {{total_okul.price__sum}}],
+          ['Market {{total_market.price__sum}}',      {{total_market.price__sum}}],
+          ['Diğer {{total_diger.price__sum}}',  {{total_diger.price__sum}}]
+
+        ]);
+
+        var options = {
+    title: 'Harcamalarım',
+    width: 470,
+    height: 380,
+    backgroundColor: 'transparent',
+    is3D: true
+};
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+        chart.draw(data, options);
+      }
+    </script>
+{%endblock%}
+{%block head%}
+
+<link rel='stylesheet' href='https://unpkg.com/emoji.css/dist/emoji.min.css'>
+
+
+{%endblock%}
+
+{%block content%}
+
+<div id="genel-div">
+
+
+<!--######################################################################################################################-->
+
+  <form  class="" action="/add_product/" method="get">
+
+    {% csrf_token%}
+
+<div class="input-group container mb-3 row  mt-5">
+  <div class="col-md-2 col-12 mt-2 ">
+    <select class="form-select " id="inputGroupSelect01" name="prtype">
+      <option selected value="0">Harcama Tipi</option>
+      <option value="Market">Market</option>
+      <option value="Okul">Okul</option>
+      <option value="Diğer">Diğer</option>
+
+
+    </select>
+  </div>
+
+<div class="col-md-8 col-12 container row mt-2" >
+  <input type="text" class="form-control" autocomplete="off"  placeholder="Harcama adı" name="prname">
+
+</div>
+
+
+<div class="col-md-2 col-12 container rowf mt-2" >
+  <input type="number" class="form-control " placeholder="Fiyat"   name="prprice">
+
+</div>
+<div class="col-md-12 col-12 mt-2">
+  <button class="btn btn-outline-secondary" type="submit" id="button-addon2" id="kaydetbtn">Kaydet</button> </div>
+</div>
+
+<br />
+
+
+<!--######################################################################################################################-->
+<table id="example" class="display " >
+  <thead>
+    <tr>
+        <th>Harcama Adı</th>
+        <th>Fiyatı</th>
+        <th>Tipi</th>
+        <th>Tarih</th>
+        <th>İşlem</th>
+		    <th class="bg-table"></th>
+
+
+    </tr>
+</thead>
+<tbody>
+  {% for product in products %}
+
+  <tr>
+    <td>
+<b>{{product.name}}</b>
+
+		{% if product.gifLink%}
+		<img src="{{product.gifLink}}" width="50rem" height="50rem" alt="">
+		{% endif %}
+    </td>
+
+    <td><span class="count">{{product.price}}</span>₺</td>
+    <td>{{product.type}}</td>
+    <td>{{product.created_at}}</td>
+
+
+    <td><a  style="background: #FF3131" class="btn btn-trash btn btn-sm col-md-6 rounded-3 text-white text-center float-end" id="delete" href="{% url 'delete_item' id=product.id %}"> <i class="fa-solid fa-trash"></i></a>
+    </td>
+	<td class="bg-table"> 
+		
+	</td>
+
+
+</tr>
+{% endfor %}
+
+</tbody>
+<tr>
+  <td><b>Toplam Harcama:</b></td>
+  {%if total.price__sum > 0 %}
+  <td><span class="count">{{total.price__sum}}</span>₺</td>
+  {%else%}
+  <td><span class="">{{total.price__sum}}</span>₺</td>
+{% endif %}
+  <td>Tüm</td>
+<td></td>
+</tr>
+</table>
+<div class="col-md-6" id="piechart" style="width: 400; height:400px;"></div>
+
+</div>
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js" integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/masonry/4.2.2/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
+
+<script>
+	var popoverTriggerList = [].slice.call( document.querySelectorAll( '[data-toggle="popover"]' ) );
+	var popoverList = popoverTriggerList.map( function( popoverTrigger )
+	{
+		return new bootstrap.Popover( popoverTrigger );
+	} );
+
+  $(function() {
+        function count($this){
+            var current = parseInt($this.html(), 0);
+            $this.html(++current);
+            if(current !== $this.data('count')){
+                setTimeout(function(){count($this)}, 1);
+            }
+        } 
+        
+     
+      $(".count").each(function() {
+          $(this).data('count', parseInt($(this).html(), 10));
+          $(this).html('0');
+          count($(this));
+      });
+    });
+	</script>
+
+{%endblock%}
+
+
+
+
+
+

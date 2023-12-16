@@ -1,0 +1,174 @@
+div.drop-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  height: 200px;
+  width: 200px;
+}
+
+div.drop {
+  z-index: 6 !important;
+  position: absolute;
+  top: -25%;
+  width: 100%;
+  height: 100%;
+  border-radius: 100% 5% 100% 100%;
+  transform: rotate(-45deg);
+  margin: 0px;
+  background: #0099fe !important;
+  animation: drip 4s forwards;
+}
+
+.gotw {
+  display: none;
+  background: #0099fe !important;
+  color: white;
+  font-size: 2.5rem;
+  height: 6rem !important;
+  z-index: 7 !important;
+  margin: auto;
+  text-align: center;
+  opacity: 0;
+  animation: appear 2s 2.5s forwards;
+}
+
+@keyframes appear {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+div.drop-container:before,
+div.drop-container:after {
+  content: "";
+  position: absolute;
+  z-index: 6 !important;
+  top: 55%;
+  right: 50%;
+  transform: translate(50%) rotateX(75deg);
+  border-radius: 100%;
+  opacity: 0;
+  width: 75%;
+  height: 75%;
+  border: 5px solid skyblue;
+  animation: dripple 2s ease-out 1s;
+}
+
+div.drop-container:after {
+  z-index: 6 !important;
+
+  animation: dripple 2s ease-out 1.7s;
+}
+
+@keyframes drip {
+  45% {
+    top: 0;
+    border-radius: 100% 5% 100% 100%;
+    transform: rotate(-45deg);
+  }
+  100% {
+    top: 0;
+    transform: rotate(0deg);
+    border-radius: 100%;
+  }
+}
+
+@keyframes dripple {
+  0% {
+    width: 150px;
+    height: 150px;
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    width: 500px;
+    height: 500px;
+    top: -20%;
+    opacity: 0;
+  }
+}
+
+.lecture-list {
+  max-width: 80% !important;
+}
+
+.fc-event,
+.fc-day-grid-event {
+  min-height: 3rem !important;
+  min-width: 2rem !important;
+}
+
+@keyframes ani_wave {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 100% 0;
+  }
+}
+
+#calendar {
+  border: 1rem;
+  border-radius: 1rem;
+  padding: 1rem;
+  --calendar-bg: rgb(240, 240, 255);
+  --calendar-bg-gr: linear-gradient(
+    90deg,
+    rgba(240, 240, 255, 0.9738489145658263) 0%,
+    rgba(217, 239, 255, 1) 47%,
+    rgba(244, 244, 255, 1) 100%
+  );
+  background: var(--calendar-bg);
+  background: var(--calendar-bg-gr);
+}
+.etkinlikler-div {
+  background: rgb(240, 240, 255);
+  background: linear-gradient(
+    286deg,
+    rgba(246, 207, 255, 0.974) 0%,
+    rgba(222, 169, 255, 0.788) 50%,
+    rgb(251, 207, 255) 100%
+  );
+
+  border: 1rem;
+  border-radius: 1rem;
+  padding: 1rem;
+}
+.right-part {
+  background: rgb(151, 213, 254);
+  background: linear-gradient(
+    20deg,
+    rgba(151, 213, 254, 0.9038209033613446) 50%,
+    rgba(226, 226, 242, 1) 100%
+  );
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
+#calendar {
+  --calendar-bg: rgb(240, 240, 255);
+  --calendar-bg-gr: linear-gradient(
+    90deg,
+    rgba(240, 240, 255, 0.9738489145658263) 0%,
+    rgba(217, 239, 255, 1) 47%,
+    rgba(244, 244, 255, 1) 100%
+  );
+  background: var(--calendar-bg);
+  background: var(--calendar-bg-gr);
+}
+
+.act-bg {
+  background: rgb(105, 153, 210);
+  background: linear-gradient(
+    97deg,
+    rgb(118, 163, 218) 0%,
+    rgb(93, 151, 221) 100%
+  );
+}

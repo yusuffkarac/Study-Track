@@ -1,0 +1,83 @@
+{% extends 'layout.html' %} 
+{%block navtitle%}
+<h2 class="navtitle">Ders Ekle</h2>
+{%endblock%} 
+{%load static%} 
+{%block title%} Ders Ekle {%endblock%}
+ {%block stylesheets%}
+<style>
+  @media only screen and (min-width: 600px) {
+      .navtitle{
+        display:none;
+    }
+</style>
+<link rel="stylesheet" href="{% static 'css/lecturesstyle.css' %}" />
+
+{%endblock%} 
+{%block dersekleblack%} bg-black{%endblock%} {%block content%}
+<h1 class="d-flex justify-content-center mt-3">Ders Ekle</h1>
+
+<div class="d-flex justify-content-center fs-4">
+  <div class="rounded-3 text-white act-bg">
+    <form class="m-5" action="/add_lecture_def/" method="post">
+      <!-- ######### başlık ######### -->
+      {% csrf_token%}
+
+      <div class="form-group">
+        <label for="lecture_title">Ders Adı</label>
+        <input
+          type="text"
+          class="form-control mt-1"
+          id="lecture_title"
+          name="lecture_title"
+          placeholder="Ders Adı"
+        />
+      </div>
+
+      <!-- ######### açıklama ######### -->
+
+      <div class="form-group mt-3">
+        <label for="lecture_description">Açıklama</label>
+        <textarea
+          type="text"
+          class="form-control mt-1"
+          id="lecture_description"
+          name="lecture_description"
+          placeholder="Ders Açıklama"
+        >
+        </textarea>
+      </div>
+
+      <!-- ######### Günler ######### -->
+
+      <div class="form-group mt-3">
+        <label for="name">Gün</label>
+
+        <select
+          class="form-select"
+          name="lecture_days"
+          multiple
+          aria-label="multiple select example"
+        >
+          {%for day in days%}
+
+          <option value="{{day.id}}">{{day}}</option>
+          {%endfor%}
+        </select>
+      </div>
+
+      <!-- ######### submit ######### -->
+
+      <div class="form-group mt-3">
+        <input
+          type="submit"
+          class="form-control mt-1 btn btn-primary"
+          name="add_lect"
+          value="Ekle"
+        />
+      </div>
+    </form>
+  </div>
+</div>
+
+{%endblock%}

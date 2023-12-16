@@ -1,0 +1,145 @@
+{% extends 'layout.html' %} {%block navtitle%}
+<h2 class="navtitle">Yemek Tranfer Kodu Ekle</h2>
+{%endblock%} {%block title%} Yemek Tranfer Kodu  Ekle {%endblock%} {%load static%} 
+{%block stylesheets%}
+
+<style>
+  @media only screen and (min-width: 600px) {
+    .navtitle {
+      display: none;
+    }
+  }
+</style>
+<link rel="stylesheet" href="{% static 'css/lecturesstyle.css' %}" />
+
+{%endblock%}
+ {%block tranfercodeblack%} bg-black{%endblock%} 
+ {%block content%}
+
+<h1 class="d-flex justify-content-center mt-3 h-50" >Yemek Transfer Kodu Ekle</h1>
+
+<div class="d-flex justify-content-center fs-4 gap-3">
+  <div class="rounded-3 text-white act-bg p-3">
+    <h2 class="">Aktarma Kodu Ekle</h2>
+
+    <form class="m-5" action="/add_transfercode_def" method="post">
+      {% csrf_token %}
+
+     <!-- ######### Yemekhane ######### -->
+
+     <div class="form-group mt-1">
+      
+      <label for="name">Yemekhane</label>
+      <select class="form-select mt-1" name="trf_hall" aria-label="">
+        <option value="Seçilmedi" selected>Yemekhane seçmek için tıklayın</option>
+        {%for hall in halls%}
+        <option value="{{hall.name}}">{{hall.name}}</option>
+        {%endfor%}
+      </select>
+    </div>
+
+      <!-- ######### Öğün ######### -->
+
+      <div class="form-group mt-1">
+        <label for="name">Öğle/Akşam Yemeği Seçiniz</label>
+        <select class="form-select mt-1" name="trf_meal" aria-label="">
+          <option value="Seçilmedi" selected>Öğün seçmek için tıklayın</option>
+          <option value="Öğle">Öğle Yemeği</option>
+          <option value="Akşam">Akşam Yemeği</option>
+
+        </select>
+      </div>
+      <!-- ######### Aktarma kodu ######### -->
+
+      <div class="form-group mt-3">
+        <label for="name">Aktarma Kodu</label>
+        <input
+          type="text"
+          class="form-control mt-1"
+          id="transfer_code"
+          name="trf_code"
+          placeholder="Aktarma Kodu"
+        />
+      </div>
+
+      <div class="form-group mt-3">
+        <input
+          type="submit"
+          class="form-control mt-1 btn btn-primary"
+          name="add_trf"
+          value="Ekle"
+        />
+      </div>
+    </form>
+  </div>
+  
+
+<!-- Kod görüntüle -->
+<div class="rounded-3 text-white act-bg w-50 h-50 p-3">
+<!-- Display Transfer Codes -->
+  <h2 class="">Aktarma Kodları</h2>
+  <!-- <ul>
+    {% for code in transfer_codes %}
+      <li class="text-break">{{ code.code }} - {{ code.hall }} - {{ code.meal }} <button class="btn btn-primary btn-copy">Kodu Kopyala</button></li>
+    {% endfor %}
+  </ul> -->
+
+  <table id="example2" class="table table-striped fs-5 " style="width:100%">
+    <thead>
+      <tr>
+          <th>Yemekhane Adı</th>
+          <th>Öğün</th>
+          <th>Kod</th>
+          <th>Kopyala</th>
+      </tr>
+  </thead>
+  <tbody>
+    {% for code in transfer_codes %}
+      <tr>
+        <td>{{ code.hall }}</td>
+        <td>{{ code.meal }}</td>
+        <td>{{ code.code }}</td>
+        <td><button class="btn btn-primary btn-copy">Kodu Kopyala</button></td>
+      </tr>
+    {% endfor %}
+  </table>
+
+</div>
+
+</div>
+
+</div>
+
+{%endblock%}
+<!-- block outbody -->
+
+{%block outbody%}
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var copyBtns = document.querySelectorAll(".btn-copy");
+    copyBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        var text = btn.parentElement.previousElementSibling.innerText;
+        var textArea = document.createElement("textarea");
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        textArea.remove();
+        alert("Kopyalandı: " + text);
+      });
+    });
+  });
+
+  $(document).ready(function() {
+    var table = $('#example2').DataTable( {
+        lengthChange: false,
+        buttons: [ 'copy', 'excel', 'pdf', 'colvis' ]
+    } );
+ 
+    table.buttons().container()
+        .appendTo( '#example_wrapper .col-md-6:eq(0)' );
+} );
+</script>
+{%endblock%}

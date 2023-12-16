@@ -1,0 +1,486 @@
+{% extends 'layout.html' %}
+{%load static%}
+{%block navtitle%}
+{%if is_home%}
+<h2 class="navtitle">Ana Sayfa</h2>
+{%else%}
+<h2 class="navtitle">Ders Detay</h2>
+{%endif%}
+{%endblock%}
+{%block title%}
+Ana sayfa
+{%endblock%}
+
+{%block mainblack%} bg-black  {%endblock%}
+
+{% block stylesheets%}
+<!-- *Note: You must have internet connection on your laptop or pc other wise below code is not working -->
+<!-- CSS for full calender -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css" rel="stylesheet" />
+<!-- JS for jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!-- JS for full calender -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@2" async defer></script>
+<link rel="stylesheet" href="{% static 'css/lecturesstyle.css' %}" />
+
+
+
+<style>
+
+
+
+  @media only screen and (min-width: 600px) {
+    .navtitle{
+      display:none;
+  }
+
+}
+  .bottle{
+    height: 15rem;
+    width: auto;
+    background-color: transparent;
+    border-right: 0.7rem solid #434343;
+    border-left: 0.7rem solid #434343;
+    border-bottom: 0.8rem solid #434343;
+    border-radius: 10px;
+  
+    margin-top:1rem ;
+  
+  }
+  .bottle_inside{
+      position:relative ;
+      width: auto;
+      background-color: #0099ff;
+      margin-top:0px
+    
+  }
+  .bottle_effect{
+    position:relative;
+    margin-bottom:0px;
+    background :  url({%static 'wave.svg'%});
+   
+  
+    animation : ani_wave 5s both infinite;
+  
+  }
+
+</style>
+
+
+{% endblock %}
+
+{%block content%}
+
+<div> 
+
+<div id="dropper" class="">
+  <div id="drop-inside" class=""></div>
+</div>
+
+</div>
+
+
+<div class="col-md-3 col-12 container row left-part" style="width:auto!important">
+
+  <!-- #################### lectures list #################### -->
+
+  <div class="lecture-list col-md-4 d-flex " style="width:auto!important">
+    <ul class="nav nav nav-pills mt-2 mb-0" style="display:flex!important">
+      {% for lecture in lectures %}
+
+      <li class="nav-item m-3 me-0">
+        <a
+          class="nav-link active"
+          aria-current="page"
+          href="{% url 'get_details' id=lecture.id %}"
+          >{{lecture}}
+          {%for act in not_done_activities %}
+          {%if act.lecture.id == lecture.id%}
+
+          <i class="fa-solid fa-bell"></i>
+
+          {%endif%}
+
+          {%endfor%}
+
+        </a>
+      </li>
+
+      {%endfor%}
+    </ul>
+
+
+  </div>
+
+  <!-- #################### days list #################### -->
+
+</div>
+<div class="col-md-12 container row" style="margin-right:0px!important;padding-right:0px!important;  ">
+      <!-- #################### left part #################### -->
+
+
+    <!-- ####################  calendar takvim #################### -->
+
+    <div class="col-md-4 mb-2 clnd ms-auto " >
+      <div id="calendar">
+
+      </div>
+      
+    
+    </div>
+
+
+        <!-- #################### etkinlikler #################### -->
+
+  <div class="col-md-4 mb-2 etkinlikler-div ms-auto" style="background-color: hsl(230deg 49% 60%)">
+    {% for lec in lecture %}
+    
+    <h1 class="text-center mt-5 bg-info text-light">{{lec.title}} detay</h1>
+    {%for day in days_of_lec %}
+    <b>{{day}}</b>
+
+    {%endfor%} günleri bu ders verilmektedir.
+    <br />
+
+    {%if lec.description %}
+    <h3>Açıklama:</h3>
+    {{lec.description}}<br> Kazanılan puan: <b><span class="count">{{lec.earned_point}}</span></b> {%endif%}
+{% if total_study.how_many_minutes__sum %}
+
+
+    Toplam Çalışma: <b><span class="count">{{total_study.how_many_minutes__sum}}</span> dakika</b>
+
+    <button class="btn btn-primary text-white"  onclick="water_it()" ><a style="text-decoration:none;color:white;" > Sula</a></button>
+{%endif%}
+    <div class="bottle">
+      <div id="red" class="bottle_effect" style="height:1rem;top:{{effect_top}}rem"></div>
+
+      <div id="red" class="bottle_inside" style="height:{{water_height}}rem;top:{{water_top}}rem"></div>
+
+
+      </div>
+    {%endfor%}
+    <br>
+
+    {%if activities %}
+ 
+
+
+    <hr />
+<!--etkinlikler-->
+    <h2 class="bg-danger text-light">Etkinlikler</h2>
+    {%endif%} 
+    {% for activity in activities %}
+    
+    <hr />
+    <div
+ 
+    {%if  activity.is_done%}
+    style="background-color: #9effbb; padding: 0.8rem"
+       
+    {%elif  activity.is_high_priority%}
+    style="background-color: #ff7f50; padding: 0.8rem;box-shadow: 10px 10px 12px 0px rgba(50,0,0,0.75);;
+    ;
+    ";
+
+    {%endif%}
+      style="background-color:hsl(0deg 100% 65% / 70%);padding:0.8rem"
+    >
+    
+    <div class="dropdown float-end">
+      <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"></a>
+    
+      <ul class="dropdown-menu" aria-labelledby="...">
+        <li>
+          <form class="" action="{% url 'set_done' id=activity.id  %}" method="get">
+            {%if activity.is_grade and not activity.is_done%} 
+            {% csrf_token%}
+    
+            <input
+              class="input-group-text w-25 float-end me-1"
+              name="grade_act"
+              min="1"
+              max="100"
+              type="number"
+            />
+    
+            {%endif%}
+    
+         {%if not activity.is_done%}
+            <input type="submit"   class="btn btn-success  " value="Yapıldı" >
+        {%endif%}
+          </form></li>
+        <li><a class="dropdown-item btn" href="{%url 'edit_activity' id=activity.id%}">Düzenle</a></li>
+        <li><a class="dropdown-item btn" href="{%url 'delete_activity' id=activity.id%}">Sil</a></li>
+        
+
+        <li><a class="dropdown-item btn"   onclick="copyit('{{activity.title}}','{{activity.description}}','{{activity.date}}','{{activity.lecture}}')">Paylaş</a></li>
+        <input style="display:none" type="text" value='{{activity.description}}' id="myInput" style="width:auto">
+
+      </ul>
+    </div>
+
+      <p>
+        <span class="fs-3 bg-dark text-light rounded" style="">Adı: </span
+        >&nbsp; {{activity}}
+      </p>
+      <p>
+        <span class="fs-3 bg-dark text-light rounded" style=""> Tarihi: </span
+        >&nbsp;{{activity.date}}
+      </p>
+
+      {%if activity.description %}
+      <p>
+        <span class="fs-3 bg-dark text-light rounded" style="">Açıklama: </span
+        >&nbsp;{{activity.description}}
+      </p>
+      {%for grade in grades%} {%if activity.id == grade.activity.id %}
+      <p>
+        <span class="fs-3 bg-dark text-light rounded" style=""> Notu: </span
+        >&nbsp;{{grade.grade}}
+        </p>
+        {%if  activity.weight > 1%}
+        <span class="fs-3 bg-dark text-light rounded" style=""> Ağırlığı: </span
+        >&nbsp;{{activity.weight}}
+        {%endif%}
+      </p>
+      {%endif%} 
+      
+    {%endfor%} <add-to-calendar-button
+    name={{activity}}
+    options="'Apple','Google'" // !!!  düzeltilebilir
+    startDate={{activity.date|date:"Y-m-d"}}
+    endDate={{activity.date|date:"Y-m-d"}}
+    startTime="15:00"
+    endTime="16:00"
+    description={{activity.description}}
+    language="tr"
+    hideCheckmark
+    listStyle="overlay"
+
+  ></add-to-calendar-button>{%endif%}
+     
+    </div>
+
+    {%endfor%}
+    
+  </div>
+
+    <!-- ####################  çalışmalarım #################### -->
+
+<div class="col-md-3 mb-2 right-part ms-auto" >
+<hr>
+  <h2 class="bg-primary text-light">Çalışmalarım</h2>
+<hr>
+
+  {% for study in studies%}
+  <div class=" p-2" style="background-color:rgba(73, 176, 255, 0.741)">
+    <p>
+      <span class="fs-3 bg-dark text-light rounded" style=""> Başlık: </span
+      >&nbsp;<span class="fs-5 fw-bold">{{study.title}}</span>
+    </p>
+
+    <p>
+      <span class="fs-3 bg-dark text-light rounded" style=""> Ders: </span
+      >&nbsp;<span class="fs-5 fw-bold">{{study.lecture}}</span>
+    </p>
+
+    <p>
+      <span class="fs-3 bg-dark text-light rounded" style=""> Süre: </span
+      >&nbsp;<span class="fs-5 fw-bold"><span class="count">{{study.how_many_minutes}} </span> dakika</span>
+
+    </p>
+
+
+  </div>
+  <hr>
+
+  {%endfor%}
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+<div class="days-list col-md-4" style="width:auto!important" style="height:400px!important">
+  <ul class="nav flex-raw nav nav-pills   mt-5">
+    {% for day in days %}
+
+    <li class="nav-item m-3 " style="width: 15%;">
+      <a
+        class="nav-link active"
+        aria-current="page"
+        href="{% url 'get_lectures_byday' id=day.id  %}"
+        >{{day}}</a
+      >
+    </li>
+    {%endfor%}
+  </ul>
+
+
+
+</div>
+
+
+{%endblock%}
+
+{% block outbody %}
+<script>
+  $(document).ready(function() {
+
+    themeSystem: 'bootstrap5',
+
+      $('#calendar').fullCalendar({
+
+    defaultView: 'month',
+    initialView: 'timeGridDay',
+
+    eventRender: function(eventObj, $el) {
+      $el.popover({
+        title: eventObj.title,
+        content: eventObj.description,
+        trigger: 'hover',
+        placement: 'top',
+        container: 'body'
+      });
+    },
+    events: [
+    {% for act in activities %}
+
+        {
+
+          title: '{{act}}',
+          description: '{{act.description}}'.trim(),
+          start: '{{act.date|date:"Y-m-d"}}',
+          
+          {%if act.is_done%}
+          color: 'green',
+          {%elif act.is_high_priority%}
+          color: ' #ff7f50',
+
+          {%else%}
+          color: 'red',
+          {%endif%}
+          borderColor: 'black'
+
+
+
+
+
+        },
+        {%endfor%}
+
+        ]
+    });
+  });
+  </script>
+  <script>
+
+    <!--
+      var TRange=null;
+      function findString (str) {
+       if (parseInt(navigator.appVersion)<4) return;
+       var strFound;
+       if (window.find) {
+      
+        // CODE FOR BROWSERS THAT SUPPORT window.find
+        strFound=self.find(str);
+        if (strFound && self.getSelection && !self.getSelection().anchorNode) {
+         strFound=self.find(str)
+        }
+        if (!strFound) {
+         strFound=self.find(str,0,1)
+         while (self.find(str,0,1)) continue
+        }
+       }
+       else if (navigator.appName.indexOf("Microsoft")!=-1) {
+      
+        // EXPLORER-SPECIFIC CODE
+      
+        if (TRange!=null) {
+         TRange.collapse(false)
+         strFound=TRange.findText(str)
+         if (strFound) TRange.select()
+        }
+        if (TRange==null || strFound==0) {
+         TRange=self.document.body.createTextRange()
+         strFound=TRange.findText(str)
+         if (strFound) TRange.select()
+        }
+       }
+       else if (navigator.appName=="Opera") {
+        alert ("Opera browsers not supported, sorry...")
+        return;
+       }
+       if (!strFound) alert ("String '"+str+"' not found!")
+       return;
+      }
+      //-->
+
+
+
+    function sleep(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+    async function water_it(){
+      window.scrollTo({top: 0, behavior: 'smooth'});
+
+      await sleep(1000);
+      document.getElementById("dropper").classList.add("drop-container")
+      document.getElementById("drop-inside").classList.add("drop")
+      document.getElementById("gotw").style.display='block'
+
+
+      
+
+    }
+
+
+      function copyit(title,description,date,lecture){
+        copyText= 'Başlık:\n ' + title +' Açıklama: ' + "\n" + description +' Tarih:\n ' + "\n" + date +' Ders:\n ' + "\n" + lecture;
+        
+      
+        window.location.href = 'https://api.whatsapp.com/send?phone=905383603455&text='+ copyText
+      }  
+
+
+      $(function() {
+        function count($this){
+
+            var current = parseInt($this.html(), 0);
+            $this.html(++current);
+            if( current !== $this.data('count')  ) {
+                setTimeout(function(){count($this)}, 5);
+
+            }
+            
+        } 
+        console.log($(".count")[0].innerHTML)
+
+        
+      $(".count").each(function() {
+        if ($(".count")[0].innerHTML>0){
+
+
+          
+          $(this).data('count', parseInt($(this).html(), 10));
+          $(this).html('1');
+
+
+          count($(this));
+        }
+        
+        
+      });
+    });
+
+  </script>
+{%endblock%}
+

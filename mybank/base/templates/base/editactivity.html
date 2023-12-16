@@ -1,0 +1,112 @@
+
+{% extends 'layout.html' %} 
+{%block navtitle%}
+<h2 class="navtitle"> Etkinlik Düzenle </h2>
+{%endblock%}
+{%load static%}
+{%block title%}
+Görev Düzenle
+{%endblock%}
+
+{%block stylesheets%}
+<style>
+@media only screen and (min-width: 600px) {
+    .navtitle{
+      display:none;
+  }}
+  
+  
+  </style>
+  <link rel="stylesheet" href="{% static 'css/lecturesstyle.css' %}" />
+  {%endblock%}
+
+{%block etkinlikekleblack%} bg-black text-white{%endblock%}
+
+
+{%block content%}
+<h1 class="d-flex justify-content-center mt-3">Etkinlik Düzenle </h1>
+
+<div class="d-flex justify-content-center fs-4 ">
+    <div class=" rounded-3 text-white act-bg ">
+        <form class="m-5 " action="/edit_activity/{{id}}"  method="post" >
+<!-- ######### başlık ######### -->
+{% csrf_token%}
+
+    <div class="form-group  " >
+       
+        <label for="act_title_id" >Başlık</label>
+        <input type="text" class="form-control mt-1" id="act_title_id" name="act_title" value={{title}} placeholder="Aktivite başlığı">
+    
+    </div>
+
+<!-- ######### açıklama ######### -->
+
+    <div class="form-group mt-3 " >
+      
+        <label for="act_description">Açıklama</label>
+        <textarea type="text" class="form-control mt-1" id="act_description_id" name="act_description" >{{description}} </textarea>
+    
+    </div>
+
+   <!-- ######### Ders ######### -->
+
+    <div class="form-group mt-3 " >
+        
+        <label for="name">Ders</label>
+        <select class="form-select mt-1" name ="act_lecture" aria-label="">
+        
+        <option >Ders seçmek için tıklayın</option>
+        {%for lecture in lectures%}
+        {% if lecture.id == lecture_selected.id%}
+        <option selected value="{{lecture.id}}">{{lecture}}</option>
+        {%else%}
+        <option  value="{{lecture.id}}">{{lecture}}</option>
+        {%endif%}
+        {%endfor%}
+      </select>
+   
+    </div>
+
+
+    <div class="form-group mt-3 date " >
+        <label for="startDate">Tarih</label>
+        <input name="startDate" class="form-control" value={{date|date:"Y-m-d"}} type="date" />
+    </div>
+    
+
+<!-- ######### notu var mı ######### -->
+
+    <div class="form-group mt-3 ">
+        <label for="name">Ağırlık (varsa)</label>
+
+        <div class="input-group mb-3">
+            <div class="input-group-text">
+              <input class="form-check-input mt-0" type="radio" value="True" name="act_is_grade" aria-label="Checkbox for following text input">
+            </div>
+            <input type="number" value={{weight}} class="form-control" name="act_weight" aria-label="Text input with checkbox">
+          </div>
+    </div>
+    <div class="form-group mt-3 ">
+        <label for="name">Öncelikli görev mi?</label>
+
+        <div class="input-group mb-3">
+            <div class="input-group-text">
+              <input class="form-check-input mt-0" type="checkbox" value="True" name="act_is_high_priority" aria-label="Checkbox for following text input">
+            </div>
+          </div>
+    </div>
+
+
+    <div class="form-group mt-3 ">
+
+        <input type="submit" class="form-control mt-1 btn btn-primary"  name="add_act" value="Ekle">
+
+    </div>
+
+</form>   
+</div>
+
+</div>
+
+{%endblock%}
+
