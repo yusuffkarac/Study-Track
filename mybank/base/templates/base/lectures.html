@@ -14,7 +14,6 @@ Ana sayfa
 {%block mainblack%} bg-black  {%endblock%}
 
 {% block stylesheets%}
-<!-- *Note: You must have internet connection on your laptop or pc other wise below code is not working -->
 <!-- CSS for full calender -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css" rel="stylesheet" />
 <!-- JS for jQuery -->
@@ -23,6 +22,7 @@ Ana sayfa
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@2" async defer></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.10.5/dist/locale-all.min.js"></script>
 <link rel="stylesheet" href="{% static 'css/lecturesstyle.css' %}" />
 
 
@@ -215,22 +215,20 @@ Ana sayfa
         <li><a class="dropdown-item btn" href="{%url 'edit_activity' id=activity.id%}">Düzenle</a></li>
         <li><a class="dropdown-item btn" href="{%url 'delete_activity' id=activity.id%}">Sil</a></li>
         
-
         <li><a class="dropdown-item btn"   onclick="copyit('{{activity.title}}','{{activity.description}}','{{activity.date}}','{{activity.lecture}}')">Paylaş</a></li>
         <input style="display:none" type="text" value='{{activity.description}}' id="myInput" style="width:auto">
 
       </ul>
     </div>
-
-      <p>
-        <span class="fs-3 bg-dark text-light rounded" style="">Adı: </span
-        >&nbsp; {{activity}}
-      </p>
-      <p>
-        <span class="fs-3 bg-dark text-light rounded" style=""> Tarihi: </span
-        >&nbsp;{{activity.date}}
-      </p>
-
+    <p>
+      <span class="fs-3 bg-dark text-light rounded" style="">Adı: </span
+      >&nbsp; {{ activity }}
+  </p>
+  <p>
+      <span class="fs-3 bg-dark text-light rounded" style=""> Tarihi: </span
+      >&nbsp;{{ activity.date|date:"d F Y, l" }}
+  </p>
+  
       {%if activity.description %}
       <p>
         <span class="fs-3 bg-dark text-light rounded" style="">Açıklama: </span
@@ -249,16 +247,15 @@ Ana sayfa
       {%endif%} 
       
     {%endfor%} <add-to-calendar-button
-    name={{activity}}
+    name="{{activity}}"
     options="'Apple','Google'" // !!!  düzeltilebilir
     startDate={{activity.date|date:"Y-m-d"}}
     endDate={{activity.date|date:"Y-m-d"}}
     startTime="15:00"
     endTime="16:00"
-    description={{activity.description}}
+    description="{{activity.description}}"
     language="tr"
     hideCheckmark
-    listStyle="overlay"
 
   ></add-to-calendar-button>{%endif%}
      
@@ -341,6 +338,8 @@ Ana sayfa
 
     defaultView: 'month',
     initialView: 'timeGridDay',
+    locale: 'tr',
+
 
     eventRender: function(eventObj, $el) {
       $el.popover({
@@ -383,7 +382,7 @@ Ana sayfa
   </script>
   <script>
 
-    <!--
+   // <!--
       var TRange=null;
       function findString (str) {
        if (parseInt(navigator.appVersion)<4) return;
@@ -443,13 +442,24 @@ Ana sayfa
     }
 
 
-      function copyit(title,description,date,lecture){
-        copyText= 'Başlık:\n ' + title +' Açıklama: ' + "\n" + description +' Tarih:\n ' + "\n" + date +' Ders:\n ' + "\n" + lecture;
-        
-      
-        window.location.href = 'https://api.whatsapp.com/send?phone=905383603455&text='+ copyText
-      }  
+    function copyit(title, description, date, lecture) {
+      var copyText =
+      '*Başlık:* ' +
+      title + '\n'+
+      '*Açıklama:* ' +
+      description + '\n'+
+      '*Tarih:* ' +
 
+      date.substring(0, date.length - 5) + '\n'+
+      '*Ders:* ' +
+      lecture;
+  
+      var encodedText = encodeURIComponent(copyText);
+  
+      // WhatsApp link
+      window.location.href = 'https://api.whatsapp.com/send?text=' + encodedText;
+  }
+  
 
       $(function() {
         function count($this){

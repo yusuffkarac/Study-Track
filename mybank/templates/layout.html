@@ -2,6 +2,7 @@
 {%load static%}
 <html lang="en">
   <head>
+    <link rel="icon" type="image/x-icon" href="https://img.icons8.com/?size=512&id=INcxb9GXWSZs&format=png">
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -129,6 +130,13 @@
                 >Yemek Kodu Ekle/Görüntüle</a
               >
             </li>
+            <li class="nav-item">
+              <a
+                class="nav-link text-white rounded-pill me-2 p-2 mb-1 {%block pomodoroblack%} {%endblock%}"
+                href="/pomodoro"
+                >Pomodoro</a
+              >
+            </li>
           </ul>
           <div class="dropdown me-5">
             <button
@@ -141,6 +149,7 @@
             >
               
               <img
+
                 src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80"
                 class="rounded-circle"
                 width="45px"
@@ -178,6 +187,8 @@
         $("#example").DataTable();
       });
     </script>
+
+    
   </body>
   {% block outbody%} {% endblock %}
 </html>

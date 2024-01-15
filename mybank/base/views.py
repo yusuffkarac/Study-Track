@@ -53,6 +53,7 @@ def add_activity(request):
 
         context={
             'lectures': Lectures.objects.filter(created_by = request.user).all(),
+            'user': request.user,
             }
         return render(request, 'base/addactivity.html',context)
     else:
@@ -292,6 +293,16 @@ def add_transfercode_def(request):
 
         # run the function as render
         return redirect("/add_transfercode")
+    else:
+        return redirect("login")
+
+def pomodoro(request):
+    if request.user.is_authenticated:
+
+        context={
+            'lectures': Lectures.objects.filter(created_by = request.user).all(),
+            }
+        return render(request, 'base/pomodoro.html',context)
     else:
         return redirect("login")
 

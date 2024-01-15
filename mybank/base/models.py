@@ -119,3 +119,14 @@ class TransferCodes(models.Model):
 
     
 
+class ProfilePhoto(models.Model):
+    photo = models.ImageField(upload_to="profile_photos", null=True, blank=True)
+    User.profile = property(lambda u: Profile.objects.get_or_create(user=u)[0])
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+
+    def __str__(self):
+        return self.photo.name
+
+    class Meta:
+        ordering = ['created_by']

@@ -93,8 +93,7 @@
               <td>{{ code.hall }}</td>
               <td>{{ code.meal }}</td>
               <td>{{ code.code }}</td>
-              <td><button class="btn btn-primary btn-copy" onclick="checkValidity('{{ code.code }}')">Kodu Kopyala</button></td>
-
+              <td><button class="btn btn-primary btn-copy" onclick="checkValidity('{{ code.code }}')">Ksodu Kopyala</button></td>
           </tr>
           {% endfor %}
       </tbody>
@@ -107,39 +106,41 @@
 {%block outbody%}
 <script>
 
-
+function checkValidity(code) {
+  console.log(code);
+  // Belirli bir kodun doğruluğunu API'ye kontrol ettir
+  $.ajax({
+      type: "GET",
+      url: "http://127.0.0.1:8000/api/checkValid/",  // API endpoint'inizi buraya ekleyin
+      data: { code: code },
+      success: function(response) {
+          // API'den gelen yanıtı kullanarak UI'ı güncelle
+          if (response.is_valid) {
+              alert("Kod geçerlidir.");
+          } else {
+              alert("Kod geçerli değildir.");
+          }
+      },
+      error: function() {
+          alert("API isteği sırasında bir hata oluştu.");
+      }
+  });
+}
 </script>
 <script>
 
   document.addEventListener("DOMContentLoaded", function () {
-
     var copyBtns = document.querySelectorAll(".btn-copy");
     copyBtns.forEach((btn) => {
       btn.addEventListener("click", () => {
-        $.ajax({
-          type: "GET",
-          url: "http://127.0.0.1:8000/api/is_valid/",  // API endpoint'inizi buraya ekleyin
-          success: function(response) {
-              // API'den gelen yanıtı kullanarak UI'ı güncelle
-              if (response.is_valid) {
-                var text = btn.parentElement.previousElementSibling.innerText;
-                var textArea = document.createElement("textarea");
-                textArea.value = text;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand("copy");
-                textArea.remove();
-                  alert("Kod geçerlidir, kopyalandı.");
-                  
-              } else {
-                  alert("Kod geçerli değildir.");
-              }
-          },
-          error: function() {
-            
-              alert("API isteği sırasında bir hata oluştu.");
-          }
-      });
+        var text = btn.parentElement.previousElementSibling.innerText;
+        var textArea = document.createElement("textarea");
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        textArea.remove();
+        alert("Kopyalandı: " + text);
       });
     });
   });
